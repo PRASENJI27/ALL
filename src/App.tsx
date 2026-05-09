@@ -116,7 +116,7 @@ export default function App() {
             isOptimizing={isOptimizing}
           />
         </div>
-        <div className="h-full min-h-0 flex flex-col gap-4 print:block print:h-auto">
+        <div className="h-full min-h-0 flex flex-col gap-4 print:block print:h-auto print:w-full">
           <div className="flex bg-slate-200/50 p-1 rounded-2xl w-fit print:hidden">
             <button
               onClick={() => setActiveTab('resume')}

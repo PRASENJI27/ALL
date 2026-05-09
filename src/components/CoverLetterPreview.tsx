@@ -48,7 +48,7 @@ export default function CoverLetterPreview({ data, coverLetter }: Props) {
       </div>
 
       {/* The Letter */}
-      <div className="flex-1 bg-white shadow-2xl rounded-sm p-16 overflow-y-auto print:shadow-none print:p-0 print:overflow-visible font-sans text-[#1a1a1a] border border-slate-100 print:border-none" style={{ fontFamily: '"Inter", "Arial", sans-serif' }}>
+      <div className="resume-container flex-1 bg-white shadow-2xl rounded-sm p-16 overflow-y-auto print:shadow-none print:p-0 print:overflow-visible font-sans text-[#1a1a1a] border border-slate-100 print:border-none" style={{ fontFamily: '"Inter", "Arial", sans-serif' }}>
         <header className="mb-10">
           <h1 className="text-2xl font-bold uppercase tracking-wide mb-2">
             {data.personalInfo.fullName || "Your Full Name"}
