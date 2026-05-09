@@ -94,7 +94,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans p-6 lg:p-12">
-      <header className="max-w-7xl mx-auto mb-10 flex items-center justify-between">
+      <header className="max-w-7xl mx-auto mb-10 flex items-center justify-between print:hidden">
         <button 
           onClick={() => setStarted(false)} 
           className="text-2xl font-black text-slate-900 tracking-tighter hover:opacity-70 transition-opacity"
@@ -107,8 +107,8 @@ export default function App() {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-8 h-[calc(100vh-180px)]">
-        <div className="h-full min-h-0">
+      <main className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-8 h-[calc(100vh-180px)] print:block print:h-auto">
+        <div className="h-full min-h-0 print:hidden">
           <ResumeForm
             data={data}
             onChange={setData}
@@ -116,8 +116,8 @@ export default function App() {
             isOptimizing={isOptimizing}
           />
         </div>
-        <div className="h-full min-h-0 flex flex-col gap-4">
-          <div className="flex bg-slate-200/50 p-1 rounded-2xl w-fit">
+        <div className="h-full min-h-0 flex flex-col gap-4 print:block print:h-auto">
+          <div className="flex bg-slate-200/50 p-1 rounded-2xl w-fit print:hidden">
             <button
               onClick={() => setActiveTab('resume')}
               className={cn(
@@ -138,7 +138,7 @@ export default function App() {
             </button>
           </div>
 
-          <div className="flex-1 min-h-0 overflow-hidden">
+          <div className="flex-1 min-h-0 overflow-hidden print:overflow-visible print:block">
             {activeTab === 'resume' ? (
               <ResumePreview
                 data={data}
@@ -154,7 +154,7 @@ export default function App() {
         </div>
       </main>
 
-      <footer className="max-w-7xl mx-auto mt-8 pt-8 border-t border-slate-200 flex justify-between items-center text-[10px] text-slate-400 font-bold uppercase tracking-widest">
+      <footer className="max-w-7xl mx-auto mt-8 pt-8 border-t border-slate-200 flex justify-between items-center text-[10px] text-slate-400 font-bold uppercase tracking-widest print:hidden">
         <div>© 2026 RESUBEAT AI SYSTEMS</div>
         <div className="flex gap-6">
           <a href="#" className="hover:text-slate-600 transition-colors">Privacy Policy</a>

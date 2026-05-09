@@ -1,9 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
 @import "tailwindcss";
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-serif: "Libre Baskerville", serif;
 }
 
 @layer base {
@@ -15,18 +16,15 @@
 /* Custom Print Styles */
 @media print {
   @page {
-    margin: 0.5in;
-    size: auto;
+    margin: 0.4in;
+    size: letter;
   }
   body {
     background: white !important;
     padding: 0 !important;
     margin: 0 !important;
   }
-  header, footer, .bg-slate-50, .border-slate-100 {
-    background: white !important;
-  }
-  .print\:hidden, nav, button, .stepper-header {
+  .print\:hidden {
     display: none !important;
   }
   .print\:p-0 {
@@ -36,8 +34,17 @@
     box-shadow: none !important;
     border: none !important;
   }
-  .flex-1 {
-    overflow: visible !important;
-    height: auto !important;
+  .resume-container {
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  /* Hide all app UI during print */
+  header, footer, .form-container, .tabs-container {
+    display: none !important;
   }
 }

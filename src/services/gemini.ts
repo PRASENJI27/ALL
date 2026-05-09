@@ -3,18 +3,24 @@ import { ResumeData, ATSOptimizationResult, CoverLetterResult } from "../types";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-const SYSTEM_PROMPT = `You are an expert Resume Writer and ATS (Applicant Tracking System) Specialist.
-Your goal is to optimize a candidate's resume for a specific Job Description to achieve a 100% match score.
+const SYSTEM_PROMPT = `You are the world's most advanced ATS (Applicant Tracking System) Optimization Specialist and Resume Architect.
+Your mission is to transform user data into a resume that achieves a perfect 100% score on any resume tracker (Workday, Greenhouse, Lever, Taleo, etc.).
 
-RULES:
-1. KEYWORD INJECTION: Identify critical hard skills, tools, and industry terms from the Job Description and seamlessly integrate them into the resume.
-2. ACTION VERBS: Start bullet points with strong action verbs (e.g., Led, Developed, Optimized, Spearheaded).
-3. QUANTIFIABLE RESULTS: Transform descriptions to include numbers, percentages, and metrics wherever possible (e.g., "Increased efficiency by 25%").
-4. ATS FORMATTING: Keep the structure clean. Use standard section headers.
-5. NO FLUFF: Remove generic adjectives. Focus on concrete skills and achievements.
-6. TAILORING: The optimized resume must feel like it was written specifically for the target role.
+ATS COMPLIANCE PROTOCOLS:
+1. KEYWORD DENSITY: Identify and extract the top 20 relevant hard skills, software, and industry-specific keywords from the Job Description. Integrate them naturally.
+2. ACTION-RESULT BULLETS: Every experience bullet point MUST follow the Formula: [Strong Action Verb] + [Quantifiable Task] + [Result/Impact]. Use specific numbers ($, %, #).
+3. HIERARCHICAL RELEVANCE: Prioritize keywords found in the Job Description's "Requirements" or "Qualifications" sections.
+4. STANDARD TERMINOLOGY: Use standard headings (e.g., "EXPERIENCE" not "My Journey").
+5. NO FLUFF: Eliminate buzzwords and filler (e.g., "Passionate", "Detail-oriented", "Team player"). Focus on EVIDENCE of skills.
+6. TAILORING: Reverse-engineer the Job Description to ensure the optimized resume looks like the "Ideal Candidate" profile.
 
-Generate the response in JSON format.`;
+OUTPUT REQUIREMENTS:
+- optimizedSummary: A high-impact 3-4 line summary packed with keywords.
+- optimizedExperiences: Redacted bullet points for each role. Each role should have 3-5 bullets.
+- optimizedProjects: Optimized descriptions highlighting technical depth.
+- optimizedSkills: A categorized list of hard skills found in the JD.
+
+Format all output as clean, parseable JSON. Do not include markdown code block markers in the JSON string itself.`;
 
 export async function optimizeResume(
   userData: ResumeData,
@@ -54,6 +60,19 @@ Return the optimized content and an estimated ATS match score (out of 100) with 
                 description: { type: Type.STRING, description: "Bullet points separated by newlines" },
               },
               required: ["id", "company", "position", "description"]
+            }
+          },
+          optimizedProjects: {
+            type: Type.ARRAY,
+            items: {
+              type: Type.OBJECT,
+              properties: {
+                id: { type: Type.STRING },
+                name: { type: Type.STRING },
+                description: { type: Type.STRING, description: "Bullet points separated by newlines" },
+                link: { type: Type.STRING },
+              },
+              required: ["id", "name", "description"]
             }
           },
           optimizedSkills: {

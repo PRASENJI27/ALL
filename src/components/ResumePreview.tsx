@@ -10,6 +10,7 @@ interface Props {
 
 export default function ResumePreview({ data, optimization }: Props) {
   const experiences = optimization?.optimizedExperiences || data.experiences;
+  const projects = optimization?.optimizedProjects || data.projects;
   const skills = optimization?.optimizedSkills || data.skills;
   const summary = optimization?.optimizedSummary || data.summary;
 
@@ -22,7 +23,7 @@ export default function ResumePreview({ data, optimization }: Props) {
       {/* ATS Score Header (Only if optimized) */}
       {optimization && (
         <div className={cn(
-          "p-6 rounded-2xl flex flex-col gap-4 border",
+          "p-6 rounded-2xl flex flex-col gap-4 border print:hidden",
           optimization.atsScore >= 80 ? "bg-green-50 border-green-100" : "bg-yellow-50 border-yellow-100"
         )}>
           <div className="flex items-center justify-between">
@@ -58,56 +59,81 @@ export default function ResumePreview({ data, optimization }: Props) {
         </div>
       )}
 
-      {/* The Resume */}
-      <div className="flex-1 bg-white shadow-2xl rounded-sm p-12 overflow-y-auto print:shadow-none print:p-0 print:overflow-visible font-sans text-[#1a1a1a] border border-slate-100 print:border-none" style={{ fontFamily: '"Inter", "Arial", sans-serif' }}>
-        <header className="text-center mb-8">
-          <h1 className="text-2xl font-bold uppercase tracking-wide mb-2">
+      {/* The Resume: Jake Ryan Style */}
+      <div className="resume-container flex-1 bg-white shadow-2xl rounded-sm p-12 overflow-y-auto print:shadow-none print:p-0 print:overflow-visible font-serif text-[#111111] border border-slate-100 print:border-none" style={{ fontFamily: '"Libre Baskerville", "Times New Roman", serif' }}>
+        <header className="text-center mb-6">
+          <h1 className="text-3xl font-normal leading-tight mb-2">
             {data.personalInfo.fullName || "Your Full Name"}
           </h1>
-          <div className="text-[11px] text-slate-700 flex flex-wrap justify-center items-center gap-3 gap-y-2">
-            {data.personalInfo.location && (
-              <span className="flex items-center gap-1"><MapPin size={10} className="text-slate-400" /> {data.personalInfo.location}</span>
-            )}
-            {data.personalInfo.phone && (
-              <span className="flex items-center gap-1"><Phone size={10} className="text-slate-400" /> {data.personalInfo.phone}</span>
-            )}
+          <div className="text-[11px] text-slate-800 flex flex-wrap justify-center items-center gap-x-2 gap-y-1">
+            {data.personalInfo.phone && <span>{data.personalInfo.phone}</span>}
             {data.personalInfo.email && (
-              <span className="flex items-center gap-1"><Mail size={10} className="text-slate-400" /> {data.personalInfo.email}</span>
+              <>
+                <span className="hidden sm:inline"> | </span>
+                <a href={`mailto:${data.personalInfo.email}`} className="hover:underline">{data.personalInfo.email}</a>
+              </>
             )}
             {data.personalInfo.linkedin && (
-              <span className="flex items-center gap-1"><Linkedin size={10} className="text-slate-400" /> {data.personalInfo.linkedin}</span>
+              <>
+                <span className="hidden sm:inline"> | </span>
+                <a href={data.personalInfo.linkedin.startsWith('http') ? data.personalInfo.linkedin : `https://${data.personalInfo.linkedin}`} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                  {data.personalInfo.linkedin.replace(/^https?:\/\/(www\.)?/, '')}
+                </a>
+              </>
             )}
             {data.personalInfo.github && (
-              <span className="flex items-center gap-1"><Github size={10} className="text-slate-400" /> {data.personalInfo.github}</span>
+              <>
+                <span className="hidden sm:inline"> | </span>
+                <a href={data.personalInfo.github.startsWith('http') ? data.personalInfo.github : `https://${data.personalInfo.github}`} target="_blank" rel="noopener noreferrer" className="hover:underline">
+                  {data.personalInfo.github.replace(/^https?:\/\/(www\.)?/, '')}
+                </a>
+              </>
             )}
           </div>
         </header>
 
         {summary && (
-          <section className="mb-5">
-            <h2 className="text-xs font-bold uppercase border-b border-slate-300 pb-0.5 mb-2 tracking-wider flex items-center gap-2">
-               <FileText size={12} className="text-slate-400" /> Professional Summary
-            </h2>
-            <p className="text-[12px] leading-relaxed text-slate-800">{summary}</p>
+          <section className="mb-4">
+            <h2 className="text-[13px] font-bold uppercase border-b border-black pb-0.5 mb-2 tracking-widest">Summary</h2>
+            <p className="text-[11px] leading-relaxed text-slate-800">{summary}</p>
+          </section>
+        )}
+
+        {data.education.length > 0 && (
+          <section className="mb-4">
+            <h2 className="text-[13px] font-bold uppercase border-b border-black pb-0.5 mb-2 tracking-widest">Education</h2>
+            <div className="space-y-2">
+              {data.education.map((edu) => (
+                <div key={edu.id}>
+                  <div className="flex justify-between items-baseline">
+                    <h3 className="font-bold text-[12px]">{edu.school}</h3>
+                    <span className="text-[11px] font-bold">{data.personalInfo.location || "Location"}</span>
+                  </div>
+                  <div className="flex justify-between items-baseline">
+                    <p className="text-[11px] italic">{edu.degree}</p>
+                    <span className="text-[11px] italic">{edu.startDate} – {edu.endDate}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
           </section>
         )}
 
         {experiences.length > 0 && (
-          <section className="mb-5">
-            <h2 className="text-xs font-bold uppercase border-b border-slate-300 pb-0.5 mb-2 tracking-wider flex items-center gap-2">
-               <Briefcase size={12} className="text-slate-400" /> Experience
-            </h2>
+          <section className="mb-4">
+            <h2 className="text-[13px] font-bold uppercase border-b border-black pb-0.5 mb-2 tracking-widest">Experience</h2>
             <div className="space-y-4">
               {experiences.map((exp) => (
                 <div key={exp.id}>
-                  <div className="flex justify-between items-baseline mb-0.5">
-                    <h3 className="font-bold text-[13px]">{exp.company}</h3>
-                    <span className="text-[11px] font-medium text-slate-600">{exp.startDate} – {exp.endDate}</span>
+                  <div className="flex justify-between items-baseline">
+                    <h3 className="font-bold text-[12px]">{exp.company}</h3>
+                    <span className="text-[11px] font-bold uppercase tracking-tighter">{data.personalInfo.location || "Remote"}</span>
                   </div>
-                  <div className="flex justify-between items-baseline mb-1.5">
-                    <p className="text-[12px] italic text-slate-700">{exp.position}</p>
+                  <div className="flex justify-between items-baseline mb-1">
+                    <p className="text-[11px] italic">{exp.position}</p>
+                    <span className="text-[11px] italic">{exp.startDate} – {exp.endDate}</span>
                   </div>
-                  <div className="text-[12px] leading-relaxed pl-5 prose prose-sm max-w-none prose-p:my-0 prose-ul:my-1 prose-li:my-0.5 text-slate-800">
+                  <div className="text-[11px] leading-tight pl-5 list-disc prose prose-sm max-w-none prose-p:my-0 prose-ul:my-0 prose-li:my-0.5 text-black">
                     <ReactMarkdown>{exp.description}</ReactMarkdown>
                   </div>
                 </div>
@@ -116,32 +142,34 @@ export default function ResumePreview({ data, optimization }: Props) {
           </section>
         )}
 
-        {skills.length > 0 && (
-          <section className="mb-5">
-            <h2 className="text-xs font-bold uppercase border-b border-slate-300 pb-0.5 mb-2 tracking-wider flex items-center gap-2">
-               <Code size={12} className="text-slate-400" /> Skills
-            </h2>
-            <p className="text-[12px] leading-relaxed text-slate-800">
-              {skills.join(', ')}
-            </p>
+        {projects.length > 0 && (
+          <section className="mb-4">
+            <h2 className="text-[13px] font-bold uppercase border-b border-black pb-0.5 mb-2 tracking-widest">Projects</h2>
+            <div className="space-y-4">
+              {projects.map((proj) => (
+                <div key={proj.id}>
+                  <div className="flex justify-between items-baseline mb-1">
+                    <h3 className="font-bold text-[12px]">
+                      {proj.name} {proj.link && <span className="font-normal italic">| {proj.link}</span>}
+                    </h3>
+                    <span className="text-[11px]">{data.education[0]?.startDate || "Present"} – {data.education[0]?.endDate || "Present"}</span>
+                  </div>
+                  <div className="text-[11px] leading-tight pl-5 list-disc prose prose-sm max-w-none prose-p:my-0 prose-ul:my-0 prose-li:my-0.5 text-black">
+                    <ReactMarkdown>{proj.description}</ReactMarkdown>
+                  </div>
+                </div>
+              ))}
+            </div>
           </section>
         )}
 
-        {data.education.length > 0 && (
-          <section className="mb-5">
-            <h2 className="text-xs font-bold uppercase border-b border-slate-300 pb-0.5 mb-2 tracking-wider flex items-center gap-2">
-               <GraduationCap size={12} className="text-slate-400" /> Education
-            </h2>
-            <div className="space-y-3">
-              {data.education.map((edu) => (
-                <div key={edu.id}>
-                  <div className="flex justify-between items-baseline">
-                    <h3 className="font-bold text-[13px]">{edu.school}</h3>
-                    <span className="text-[11px] font-medium text-slate-600">{edu.startDate} – {edu.endDate}</span>
-                  </div>
-                  <p className="text-[12px] text-slate-700">{edu.degree}</p>
-                </div>
-              ))}
+        {skills.length > 0 && (
+          <section className="mb-4">
+            <h2 className="text-[13px] font-bold uppercase border-b border-black pb-0.5 mb-2 tracking-widest">Technical Skills</h2>
+            <div className="text-[11px] leading-relaxed">
+              <p className="flex flex-wrap gap-x-1">
+                <span className="font-bold">Skills:</span> {skills.join(', ')}
+              </p>
             </div>
           </section>
         )}

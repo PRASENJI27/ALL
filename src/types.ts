@@ -48,6 +48,7 @@ export interface CoverLetterResult {
 export interface ATSOptimizationResult {
   optimizedSummary: string;
   optimizedExperiences: Experience[];
+  optimizedProjects: Project[];
   optimizedSkills: string[];
   atsScore: number;
   suggestions: string[];

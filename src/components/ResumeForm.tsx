@@ -13,6 +13,7 @@ interface Props {
 const STEPS = [
   { id: 'personal', label: 'Personal Info', icon: User },
   { id: 'experience', label: 'Experience', icon: Briefcase },
+  { id: 'projects', label: 'Projects', icon: Code },
   { id: 'education', label: 'Education', icon: GraduationCap },
   { id: 'skills', label: 'Skills', icon: Code },
   { id: 'job', label: 'Job Description', icon: FileText },
@@ -81,6 +82,32 @@ export default function ResumeForm({ data, onChange, onSubmit, isOptimizing }: P
     onChange({
       ...data,
       education: data.education.filter((edu) => edu.id !== id),
+    });
+  };
+
+  const addProject = () => {
+    const newProj: Project = {
+      id: crypto.randomUUID(),
+      name: '',
+      description: '',
+      link: '',
+    };
+    onChange({ ...data, projects: [...data.projects, newProj] });
+  };
+
+  const updateProject = (id: string, field: keyof Project, value: string) => {
+    onChange({
+      ...data,
+      projects: data.projects.map((proj) =>
+        proj.id === id ? { ...proj, [field]: value } : proj
+      ),
+    });
+  };
+
+  const removeProject = (id: string) => {
+    onChange({
+      ...data,
+      projects: data.projects.filter((proj) => proj.id !== id),
     });
   };
 
@@ -263,6 +290,56 @@ export default function ResumeForm({ data, onChange, onSubmit, isOptimizing }: P
 
         {currentStep === 2 && (
           <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
+            {data.projects.map((proj) => (
+              <div key={proj.id} className="p-6 bg-slate-50 border border-slate-200 rounded-2xl relative group">
+                <button
+                  onClick={() => removeProject(proj.id)}
+                  className="absolute top-4 right-4 p-1.5 text-slate-400 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+                >
+                  <Trash2 size={16} />
+                </button>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="col-span-2">
+                    <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Project Name</label>
+                    <input
+                      type="text"
+                      value={proj.name}
+                      onChange={(e) => updateProject(proj.id, 'name', e.target.value)}
+                      className="w-full px-4 py-2 bg-white border border-slate-200 rounded-xl outline-none"
+                    />
+                  </div>
+                  <div className="col-span-2">
+                    <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Project Link / Tech Stack</label>
+                    <input
+                      type="text"
+                      value={proj.link}
+                      onChange={(e) => updateProject(proj.id, 'link', e.target.value)}
+                      className="w-full px-4 py-2 bg-white border border-slate-200 rounded-xl outline-none"
+                    />
+                  </div>
+                  <div className="col-span-2">
+                    <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Description</label>
+                    <textarea
+                      value={proj.description}
+                      onChange={(e) => updateProject(proj.id, 'description', e.target.value)}
+                      className="w-full px-4 py-2 bg-white border border-slate-200 rounded-xl min-h-[100px] outline-none"
+                      placeholder="Bullet points of what you built..."
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+            <button
+              onClick={addProject}
+              className="w-full py-4 border-2 border-dashed border-slate-200 rounded-2xl text-slate-400 hover:border-slate-400 hover:text-slate-600 transition-all flex items-center justify-center gap-2 font-medium"
+            >
+              <Plus size={18} /> Add Project
+            </button>
+          </div>
+        )}
+
+        {currentStep === 3 && (
+          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
             {data.education.map((edu) => (
               <div key={edu.id} className="p-6 bg-slate-50 border border-slate-200 rounded-2xl relative group">
                 <button
@@ -320,7 +397,7 @@ export default function ResumeForm({ data, onChange, onSubmit, isOptimizing }: P
           </div>
         )}
 
-        {currentStep === 3 && (
+        {currentStep === 4 && (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
             <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Skills (Comma separated)</label>
             <input
@@ -334,7 +411,7 @@ export default function ResumeForm({ data, onChange, onSubmit, isOptimizing }: P
           </div>
         )}
 
-        {currentStep === 4 && (
+        {currentStep === 5 && (
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-300 flex flex-col h-full gap-4">
             <div className="flex-1 min-h-[300px] flex flex-col">
               <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Target Job Description</label>
@@ -365,7 +442,7 @@ export default function ResumeForm({ data, onChange, onSubmit, isOptimizing }: P
       </div>
 
       {/* Navigation Footer */}
-      {currentStep < 4 && (
+      {currentStep < 5 && (
         <div className="border-t border-slate-100 p-6 bg-white flex justify-between">
           <button
             onClick={prevStep}
