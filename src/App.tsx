@@ -6,6 +6,7 @@ import ResumeForm from './components/ResumeForm';
 import ResumePreview from './components/ResumePreview';
 import CoverLetterPreview from './components/CoverLetterPreview';
 import { cn } from './lib/utils';
+console.log("Check API Key:", import.meta.env.VITE_GEMINI_API_KEY);
 
 const INITIAL_DATA: ResumeData = {
   personalInfo: {
