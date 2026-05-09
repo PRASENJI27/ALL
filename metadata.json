@@ -1,0 +1,6 @@
+{
+  "name": "ATS Master",
+  "description": "Generate 100% ATS-optimized resumes that bypass trackers and get you more interviews.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["AI Resume Generation", "ATS Keyword Optimization"]
+}
